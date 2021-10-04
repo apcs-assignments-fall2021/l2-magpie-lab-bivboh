@@ -33,34 +33,35 @@ public class Magpie
     public String getResponse(String statement)
     {
         String trimmed = statement.trim();
-        String response = "";
-        if (statement.indexOf("no") >= 0)
+        String response;
+        statement = statement.toLowerCase();
+        if (findWord(statement, "no") >= 0)
         {
             response = "Why so negative?";
         }
-        else if (statement.indexOf("mother") >= 0
-                || statement.indexOf("father") >= 0
-                || statement.indexOf("sister") >= 0
-                || statement.indexOf("brother") >= 0)
+        else if (findWord(statement, "mother") >= 0
+                || findWord(statement, "father") >= 0
+                || findWord(statement, "sister") >= 0
+                || findWord(statement, "brother") >= 0)
         {
             response = "Tell me more about your family.";
         }
-        else if (statement.indexOf("dog") >= 0 || statement.indexOf("cat") >= 0){
+        else if (findWord(statement, "dog") >= 0 || findWord(statement, "cat") >= 0){
             response = "Tell me more about your pets.";
         }
-        else if (statement.indexOf("Mr.") >= 0 || statement.indexOf("Mrs.") >= 0 ||statement.indexOf("Ms.") >= 0
-                || statement.indexOf("Mister") >= 0 || statement.indexOf("Miss") >= 0){
+        else if (findWord(statement, "mr.") >= 0 || findWord(statement, "mrs.") >= 0 ||findWord(statement, "ms.") >= 0
+                || findWord(statement, "mister") >= 0 || findWord(statement, "miss's") >= 0){
             response = "He sounds like a good teacher";
         }
-        else if (statement.indexOf("car") >= 0)
+        else if (findWord(statement, "car") >= 0)
         {
             response = "I love cars too! What do you drive?";
         }
-        else if (statement.indexOf("sport") >= 0)
+        else if (findWord(statement, "sport") >= 0)
         {
             response = "What is your favorite sport?";
         }
-        else if (statement.indexOf("basketball") >= 0)
+        else if (findWord(statement, "basketball") >= 0)
         {
             response = "Who's your favorite basketball player?";
         }
@@ -91,7 +92,7 @@ public class Magpie
         }
         else if (whichResponse == 1)
         {
-            response = "Hmmm.";
+            response = "Hmm.";
         }
         else if (whichResponse == 2)
         {
@@ -103,7 +104,7 @@ public class Magpie
         }
         else if (whichResponse == 4)
         {
-            response = "That's aboslutely intriguing!";
+            response = "That's absolutely intriguing!";
         }
         else if (whichResponse == 5)
         {
@@ -126,33 +127,34 @@ public class Magpie
     // The method returns the index of the first character in word
     // if it is found, and returns -1 otherwise. 
     public int findWord(String str, String word) {
-        word = word + " ";
+        word = word.toLowerCase();
         String all_lower = str.toLowerCase();
         int index = all_lower.indexOf(word);
-        if (index >= 0)
-        {
-            final char c = all_lower.charAt(index + word.length());
-            if (all_lower.charAt(index-1) == ' ' && index != 0 && c != ' ')
-            {
-                word = " " + word;
+        int max_num = all_lower.length() - word.length();
+        if (index == max_num) {
+            if (all_lower.charAt(index - 1) == ' ') {
+                return index;
+            }
+            else {
+                return -1;
+            }
+        } else {
+            char after_word = all_lower.charAt(index + word.length());
+            if (index > 0 && index < max_num) {
+                if (after_word == ' ' && all_lower.charAt(index - 1) == ' ') {
+                    return index;
+                }
+            } else if (index == 0) {
+                if (after_word == ' ') {
+                    return index;
+                }
+            }
+            else {
+                return -1;
+            }
 
-            }
-            else if (all_lower.charAt(index-1) == ' ' && c == ' ')
-            {
-                word = " " + word + " ";
-            }
-            else if (all_lower.charAt(index-1) != ' ' && c == ' ')
-            {
-                word = word + " ";
-
-            }
-            return index;
         }
-        else
-        {
-            return -1;
-        }
-
+        return -1;
     }
 
     
@@ -166,8 +168,18 @@ public class Magpie
      */
     public String transformIWantStatement(String statement)
     {
-        //your code here
-        return "";
+        String x;
+        statement = statement.toLowerCase();
+        int index = statement.indexOf("I want") + 6;
+        if (index >= 0)
+        {
+            x = "Would you really be happy if you had" + statement.substring(6) + "?";
+        }
+        else
+        {
+            x = statement;
+        }
+        return x;
     }
 
     /**
@@ -178,8 +190,17 @@ public class Magpie
      */
     public String transformIYouStatement(String statement)
     {
-        //your code here
-        return "";
+        String new_string;
+        statement = statement.toLowerCase();
+        if ((findWord(statement,"i") > -1) && (findWord(statement,"you") > -1 ))
+        {
+            new_string = "Why do you" + statement.substring(1, statement.length()-3) + "me?";
+
+        }
+        else {
+            new_string = statement;
+        }
+        return new_string;
     }
 
     /**
@@ -190,8 +211,19 @@ public class Magpie
      */
     public String transformIWantToStatement(String statement)
     {
-        // your code here
-        return "";
+        String x;
+        statement = statement.toLowerCase();
+        int index = statement.indexOf("I want") + 6;
+        if (index >= 0)
+        {
+            x = "What would it mean" + statement.substring(6) + "?";
+        }
+        else
+        {
+            x = statement;
+        }
+        return x;
+
     }
 
 
@@ -205,7 +237,36 @@ public class Magpie
      */
     public String transformYouMeStatement(String statement)
     {
-        // your code here
-        return "";
+        String new_string;
+        statement = statement.toLowerCase();
+        if ((findWord(statement,"you") > -1) && (findWord(statement,"me") > -1 ))
+        {
+            new_string = "What makes you think that I" + statement.substring(6, statement.length()-3) + " you?";
+
+        }
+        else {
+            new_string = statement;
+        }
+        return new_string;
     }
+
+// input = "I purchased a car"
+    public String transformcarstatement(String statement)
+    {
+        String new_string;
+        statement = statement.toLowerCase();
+        if ((findWord(statement, "car") > -1 ) && (findWord(statement, "purchased ") > -1 ))
+        {
+            new_string = "What made you" + statement.substring(2, statement.length()-5) + "that auto?";
+        }
+        else
+        {
+            new_string = statement;
+        }
+        return new_string;
+    }
+
+
+
+
 }
